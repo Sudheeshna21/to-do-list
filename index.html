@@ -3,88 +3,100 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>To-Do List: CAT & Coding</title>
+  <title>CAT & Coding Tasks</title>
   <style>
     * {
       box-sizing: border-box;
     }
     body {
-      font-family: sans-serif;
-      background: #f5f5f5;
       margin: 0;
-      padding: 10px;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f1f1f1;
+      color: #333;
+      padding: 20px;
     }
     h2 {
       text-align: center;
-      font-size: 1.5rem;
+      margin-bottom: 10px;
     }
     .section {
-      background: #fff;
-      padding: 15px;
+      background-color: #fff;
+      border-radius: 16px;
+      padding: 20px;
       margin: 20px auto;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      max-width: 100%;
+      max-width: 500px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .section h3 {
+      margin-bottom: 15px;
+      font-size: 1.25rem;
     }
     .task-input {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
-    .task-input input[type="text"],
-    .task-input input[type="date"] {
-      padding: 10px;
+    .task-input input, .task-input button {
       font-size: 1rem;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
     .task-input button {
-      padding: 10px;
-      font-size: 1rem;
       background-color: #007bff;
       color: white;
       border: none;
-      border-radius: 5px;
     }
     ul {
-      list-style-type: none;
+      list-style: none;
       padding: 0;
     }
     li {
+      background: #f9f9f9;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 10px;
       display: flex;
       flex-direction: column;
-      gap: 5px;
-      margin-bottom: 10px;
-      padding: 10px;
-      background: #e8e8e8;
-      border-radius: 5px;
     }
     li span {
       font-size: 1rem;
     }
     li.completed span {
       text-decoration: line-through;
-      color: gray;
+      color: #aaa;
     }
-    li div {
+    .actions {
       display: flex;
       justify-content: flex-end;
-      gap: 10px;
+      gap: 8px;
+      margin-top: 8px;
     }
-    li button {
-      font-size: 1rem;
-      background-color: #ccc;
+    .actions button {
+      font-size: 0.9rem;
       border: none;
-      padding: 5px 10px;
-      border-radius: 3px;
+      border-radius: 5px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+    .actions .done {
+      background: #28a745;
+      color: white;
+    }
+    .actions .delete {
+      background: #dc3545;
+      color: white;
     }
     @media (min-width: 600px) {
       .task-input {
         flex-direction: row;
       }
-      li {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
+      .task-input input[type="text"] {
+        flex: 2;
+      }
+      .task-input input[type="date"] {
+        flex: 1;
       }
     }
   </style>
@@ -94,9 +106,9 @@
   <div class="section" id="cat-section">
     <h3>CAT Preparation</h3>
     <div class="task-input">
-      <input type="text" placeholder="Task name" id="cat-task">
+      <input type="text" placeholder="Enter CAT task" id="cat-task">
       <input type="date" id="cat-deadline">
-      <button onclick="addTask('cat')">Add</button>
+      <button onclick="addTask('cat')">Add Task</button>
     </div>
     <ul id="cat-list"></ul>
   </div>
@@ -104,9 +116,9 @@
   <div class="section" id="coding-section">
     <h3>Coding Practice</h3>
     <div class="task-input">
-      <input type="text" placeholder="Task name" id="coding-task">
+      <input type="text" placeholder="Enter Coding task" id="coding-task">
       <input type="date" id="coding-deadline">
-      <button onclick="addTask('coding')">Add</button>
+      <button onclick="addTask('coding')">Add Task</button>
     </div>
     <ul id="coding-list"></ul>
   </div>
@@ -122,9 +134,9 @@
         if (task.completed) li.classList.add('completed');
         li.innerHTML = `
           <span>${task.name} (Due: ${task.deadline})</span>
-          <div>
-            <button onclick="toggleComplete('${type}', ${index})">✔</button>
-            <button onclick="deleteTask('${type}', ${index})">✘</button>
+          <div class="actions">
+            <button class="done" onclick="toggleComplete('${type}', ${index})">✔</button>
+            <button class="delete" onclick="deleteTask('${type}', ${index})">✘</button>
           </div>`;
         ul.appendChild(li);
       });
@@ -135,7 +147,7 @@
     }
 
     const addTask = (type) => {
-      const name = document.getElementById(type + '-task').value;
+      const name = document.getElementById(type + '-task').value.trim();
       const deadline = document.getElementById(type + '-deadline').value;
       if (!name || !deadline) return;
       const tasks = JSON.parse(localStorage.getItem(type + '-tasks') || '[]');
